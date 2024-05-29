@@ -1,9 +1,8 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { IUser } from "../entities/user";
+import jwt from "jsonwebtoken";
 
-export const generateToken = ({ _id, name, email }: IUser): string => {
-    return jwt.sign({ _id, name, email }, process.env.JWT_PW as string, {
-      expiresIn: "7d",
-    });
-  };
-  
+export const generateToken = (id: string , name: string , email: string) => {
+  return jwt.sign({ id, name, email }, process.env.JWT_SECRET_KEY as string, {
+    expiresIn: "7d",
+  });
+};
+

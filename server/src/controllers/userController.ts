@@ -1,9 +1,10 @@
 import User from "../entities/user";
 import validator from "validator";
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
 import Extensions from "../extensions";
 import CreateUserDTO from "../dtos/user/createUserDTO";
+import { generateToken } from "../utils/jwt-functions";
 
 //@route POST /api/users/register
 //@access public
@@ -31,5 +32,30 @@ export const registerUser = async (
   const newUser = new User(newUserDTO);
   await newUser.save();
 
-  res.status(201).send(Extensions.AsUserDto(newUser));
+  // generate a token for the user
+  const token = generateToken(newUserDTO._id, name, email);
+
+  res.status(201).send({ user: Extensions.AsUserDto(newUser), token: token });
+};
+
+//@route POST /api/users/login
+//@access public
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
+  const { email, password } = req.body;
+
+  // check if the email/password is valid
+  const existingUser = await User.findOne({ email });
+  if (!existingUser) res.status(400).json("Invalid email");
+
+  const isValidPassword = await bcrypt.compare(
+    password,
+    existingUser!.password
+  );
+  if (!isValidPassword) res.status(400).json("Invalid password");
+
+  const token = generateToken(existingUser!._id, existingUser!.name, email);
+
+  res
+    .status(200)
+    .json({ user: Extensions.AsUserDto(existingUser!), token: token });
 };
