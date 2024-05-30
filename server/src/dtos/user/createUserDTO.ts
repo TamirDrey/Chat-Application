@@ -13,5 +13,6 @@ class CreateUserDTO {
     this.name = name;
     this.password = bcrypt.hashSync(password, 10);
   }
+
 }
 export default CreateUserDTO;

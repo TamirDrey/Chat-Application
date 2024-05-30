@@ -27,9 +27,10 @@ export const registerUser = async (
 
   // create a data transfer object to the DB
   const newUserDTO = new CreateUserDTO(email, name, password);
-
+  
   // create a new object of user schema with the current DTO and save it in the DB
   const newUser = new User(newUserDTO);
+
   await newUser.save();
 
   // generate a token for the user
@@ -53,9 +54,36 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   );
   if (!isValidPassword) res.status(400).json("Invalid password");
 
-  const token = generateToken(existingUser!._id, existingUser!.name, email);
+  const token = generateToken(existingUser!.id, existingUser!.name, email);
 
   res
     .status(200)
     .json({ user: Extensions.AsUserDto(existingUser!), token: token });
+};
+
+//@route POST /api/users/find/:id
+//@access private
+export const findUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userId = req.params.id;
+
+  const user = await User.findById(userId);
+  if(!user) res.status(404).json("User not found")
+
+  res.status(200).json(Extensions.AsUserDto(user!))
+};
+
+//@route POST /api/users
+//@access private
+export const getUsers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const users = await User.find();
+
+  if(!users) res.status(404).json("User not found")
+
+  res.status(200).json(Extensions.AsUserDtoArray(users))
 };
