@@ -1,10 +1,11 @@
-function App() {
+import AppRouter from "./routes/AppRouter";
 
+function App() {
   return (
     <>
-      Chat App
+      <AppRouter />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

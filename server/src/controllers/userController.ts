@@ -61,6 +61,23 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     .json({ user: Extensions.AsUserDto(existingUser!), token: token });
 };
 
+// //@route GET /api/users/auth-me
+// //@access private
+// export const getUser = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   const token = req.headers.authorization;
+  
+//   if (!token) {
+//     res.status(401).send({ message: "Not authorized, no token" });
+//   }
+  
+//   if (user) {
+//     res.status(200).send({ user: Extensions.AsIUser(user) });
+//   }
+// };
+
 //@route POST /api/users/find/:id
 //@access private
 export const findUser = async (
