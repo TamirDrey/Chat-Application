@@ -14,7 +14,7 @@ const AppRouter = () => {
               element={<route.element />}
             />
           ))}
-          <Route path="/*" element={<Chat/>}/>
+          <Route path="/*" element={<Chat />} />
         </>
       </Routes>
     </Router>
