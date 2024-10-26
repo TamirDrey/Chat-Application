@@ -27,7 +27,7 @@ export const registerUser = async (
 
   // create a data transfer object to the DB
   const newUserDTO = new CreateUserDTO(email, name, password);
-  
+
   // create a new object of user schema with the current DTO and save it in the DB
   const newUser = new User(newUserDTO);
 
@@ -68,11 +68,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 //   res: Response
 // ): Promise<void> => {
 //   const token = req.headers.authorization;
-  
+
 //   if (!token) {
 //     res.status(401).send({ message: "Not authorized, no token" });
 //   }
-  
+
 //   if (user) {
 //     res.status(200).send({ user: Extensions.AsIUser(user) });
 //   }
@@ -80,27 +80,21 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
 //@route POST /api/users/find/:id
 //@access private
-export const findUser = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const findUser = async (req: Request, res: Response): Promise<void> => {
   const userId = req.params.id;
 
   const user = await User.findById(userId);
-  if(!user) res.status(404).json("User not found")
+  if (!user) res.status(404).json("User not found");
 
-  res.status(200).json(Extensions.AsUserDto(user!))
+  res.status(200).json(Extensions.AsUserDto(user!));
 };
 
 //@route POST /api/users
 //@access private
-export const getUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getUsers = async (req: Request, res: Response): Promise<void> => {
   const users = await User.find();
 
-  if(!users) res.status(404).json("User not found")
+  if (!users) res.status(404).json("User not found");
 
-  res.status(200).json(Extensions.AsUserDtoArray(users))
+  res.status(200).json(Extensions.AsUserDtoArray(users));
 };

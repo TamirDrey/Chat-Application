@@ -2,10 +2,14 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { checkEmail, checkPassword } from "../utils/validation";
 import AuthForm from "../components/AuthForm";
+import { useLoginMutation } from "../store/services/auth-api";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [login] = useLoginMutation();
+  const navigate = useNavigate();
 
   const validate = (): boolean => {
     const isEmailValid = checkEmail(email);
@@ -13,9 +17,15 @@ const Login = () => {
     return isEmailValid && isPasswordValid;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     toast.success("Form submitted successfully!");
-    // API request
+    await login({
+      email: email,
+      password: password,
+    }).then(() => {
+      navigate("/");
+    });
+    
   };
 
   return (
